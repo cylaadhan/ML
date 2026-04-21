@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Billing Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f0f4f8;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+
+
+        /* === MAIN === */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+        }
+
+        /* === HERO === */
+        .hero {
+            text-align: center;
+            margin-bottom: 1rem;
+            padding: 2rem 1.5rem;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: #64748b;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* === CARDS ROW === */
+        .cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* === CARD === */
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            margin-bottom: 1.2rem;
+        }
+
+        .card-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .card-header small {
+            display: block;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-top: 1px;
+        }
+
+        /* === RADIO OPTIONS === */
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .option-btn {
+            padding: 0.6rem 1.2rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .option-btn:hover {
+            border-color: #93c5fd;
+            background: #f0f7ff;
+            color: #1e40af;
+        }
+
+        .option-btn.selected {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            color: #1d4ed8;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .option-btn.selected .check-dot {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .option-btn.selected .check-dot::after {
+            opacity: 1;
+        }
+
+        .check-dot {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .check-dot::after {
+            content: '✓';
+            font-size: 0.65rem;
+            color: #fff;
+            font-weight: 800;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        /* === AGE INPUT === */
+        .age-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .age-input {
+            width: 140px;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .age-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .age-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .age-unit {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* === BUTTON === */
+        .btn-predict {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-predict:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-predict:active {
+            transform: translateY(0);
+        }
+
+        /* === RESULT === */
+        .result-card {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+        .result-info small {
+            font-size: 0.7rem;
+            color: #3b82f6;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+
+        .result-info p {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 2px;
+        }
+
+        /* === FOOTER === */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+
+        .footer span {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 700px) {
+            .cards-row {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 1.5rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.4rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .options-grid {
+                gap: 0.4rem;
+            }
+
+            .option-btn {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <main class="main">
+        <div class="hero">
+            <h1>Healthcare Billing Predictor</h1>
+            <p>Prediksi estimasi biaya medis pasien berdasarkan data.</p>
+        </div>
+
+        <form action="/predict" method="post" id="prediction-form">
+            <!-- Hidden inputs that will be submitted -->
+            <input type="hidden" name="f1" id="f1" value="0">
+            <input type="hidden" name="f2" id="f2" value="0">
+            <input type="hidden" name="f3" id="f3" value="0">
+            <input type="hidden" name="f4" id="f4" value="0">
+            <input type="hidden" name="f5" id="f5" value="0">
+            <input type="hidden" name="f6" id="f6" value="0">
+            <input type="hidden" name="f7" id="f7" value="0">
+            <input type="hidden" name="f8" id="f8" value="0">
+            <input type="hidden" name="f9" id="f9" value="0">
+            <input type="hidden" name="f10" id="f10" value="0">
+            <input type="hidden" name="f11" id="f11" value="0">
+            <input type="hidden" name="f12" id="f12" value="0">
+            <input type="hidden" name="f13" id="f13" value="0">
+            <input type="hidden" name="f14" id="f14" value="0">
+            <input type="hidden" name="f15" id="f15" value="0">
+            <input type="hidden" name="f16" id="f16" value="0">
+            <input type="hidden" name="f17" id="f17" value="0">
+
+            <!-- Row 1: Gender + Blood Type -->
+            <div class="cards-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Gender</h3>
+                        <small>Pilih jenis kelamin pasien</small>
+                    </div>
+                    <div class="options-grid" data-group="gender">
+                        <button type="button" class="option-btn" data-target="f2" data-group="gender">
+                            <span class="check-dot"></span> Male
+                        </button>
+                        <button type="button" class="option-btn" data-target="f1" data-group="gender">
+                            <span class="check-dot"></span> Female
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Blood Type -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Blood Type</h3>
+                        <small>Pilih golongan darah pasien</small>
+                    </div>
+                    <div class="options-grid" data-group="blood">
+                        <button type="button" class="option-btn" data-target="f3" data-group="blood">
+                            <span class="check-dot"></span> A+
+                        </button>
+                        <button type="button" class="option-btn" data-target="f4" data-group="blood">
+                            <span class="check-dot"></span> A-
+                        </button>
+                        <button type="button" class="option-btn" data-target="f5" data-group="blood">
+                            <span class="check-dot"></span> AB+
+                        </button>
+                        <button type="button" class="option-btn" data-target="f6" data-group="blood">
+                            <span class="check-dot"></span> AB-
+                        </button>
+                        <button type="button" class="option-btn" data-target="f7" data-group="blood">
+                            <span class="check-dot"></span> B+
+                        </button>
+                        <button type="button" class="option-btn" data-target="f8" data-group="blood">
+                            <span class="check-dot"></span> B-
+                        </button>
+                        <button type="button" class="option-btn" data-target="f9" data-group="blood">
+                            <span class="check-dot"></span> O+
+                        </button>
+                        <button type="button" class="option-btn" data-target="f10" data-group="blood">
+                            <span class="check-dot"></span> O-
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Medical Condition + Age -->
+            <div class="cards-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Medical Condition</h3>
+                        <small>Pilih kondisi medis pasien</small>
+                    </div>
+                    <div class="options-grid" data-group="condition">
+                        <button type="button" class="option-btn" data-target="f11" data-group="condition">
+                            <span class="check-dot"></span> Arthritis
+                        </button>
+                        <button type="button" class="option-btn" data-target="f12" data-group="condition">
+                            <span class="check-dot"></span> Asthma
+                        </button>
+                        <button type="button" class="option-btn" data-target="f13" data-group="condition">
+                            <span class="check-dot"></span> Cancer
+                        </button>
+                        <button type="button" class="option-btn" data-target="f14" data-group="condition">
+                            <span class="check-dot"></span> Diabetes
+                        </button>
+                        <button type="button" class="option-btn" data-target="f15" data-group="condition">
+                            <span class="check-dot"></span> Hypertension
+                        </button>
+                        <button type="button" class="option-btn" data-target="f16" data-group="condition">
+                            <span class="check-dot"></span> Obesity
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Age</h3>
+                        <small>Masukkan usia pasien</small>
+                    </div>
+                    <div class="age-wrapper">
+                        <input type="number" class="age-input" id="age-visible" placeholder="Contoh: 35" min="0"
+                            max="120" required>
+                        <span class="age-unit">tahun</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-predict" id="submit-btn">
+                Prediksi Billing Amount
+            </button>
+        </form>
+
+        <!-- Result (only visible when served through Flask with prediction) -->
+        <div id="result-section" style="display:none;">
+            <div class="result-card">
+                <div class="result-info">
+                    <small>Hasil Prediksi</small>
+                    <p id="result-text"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        Built with <span>Flask</span> · <span>Scikit-Learn</span> · <span>Linear Regression</span>
+    </footer>
+
+    <script>
+        // === Option Button Selection ===
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const group = this.dataset.group;
+                const target = this.dataset.target;
+
+                // Deselect all in same group & reset hidden inputs
+                document.querySelectorAll('.option-btn[data-group="' + group + '"]').forEach(b => {
+                    b.classList.remove('selected');
+                    document.getElementById(b.dataset.target).value = '0';
+                });
+
+                // Select this one
+                this.classList.add('selected');
+                document.getElementById(target).value = '1';
+            });
+        });
+
+        // === Sync age input to hidden field ===
+        const ageVisible = document.getElementById('age-visible');
+        ageVisible.addEventListener('input', function () {
+            document.getElementById('f17').value = this.value || '0';
+        });
+
+        // === Show result if Flask injected prediction ===
+        (function () {
+            var predictionText = "{{ prediction_text | default('') }}";
+            if (predictionText && predictionText.indexOf('prediction_text') === -1) {
+                document.getElementById('result-text').textContent = predictionText;
+                document.getElementById('result-section').style.display = 'block';
+            }
+        })();
+    </script>
+</body>
+
+</html>
